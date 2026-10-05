@@ -2,13 +2,16 @@ name: macOS CI
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
+
+permissions:
+  contents: read
 
 jobs:
   build:
-    name: Build & Verify (Universal macOS)
+    name: Build and Verify
     runs-on: macos-14
 
     steps:
@@ -18,42 +21,15 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 
-      - name: Build MOpenKey (Universal: arm64 + x86_64)
-        run: |
-          xcodebuild \
-            -project Sources/OpenKey/macOS/OpenKey.xcodeproj \
-            -scheme OpenKey \
-            -configuration Release \
-            -derivedDataPath ./build \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO \
-            build
+      - name: Make scripts executable
+        run: chmod +x scripts/*.sh
 
-      - name: Strip metadata & Ad-hoc Sign
-        run: |
-          APP="./build/Build/Products/Release/MOpenKey.app"
-          xattr -cr "${APP}"
-          codesign --force --deep --sign - "${APP}"
+      - name: Build and Package MOpenKey
+        run: ./scripts/build.sh
 
-      - name: Verify Architecture and Code Signature
-        run: |
-          APP="./build/Build/Products/Release/MOpenKey.app"
-          echo "Checking binary architectures:"
-          file "${APP}/Contents/MacOS/MOpenKey"
-          
-          echo "Verifying code signature:"
-          codesign -dvv "${APP}"
-
-      - name: Package App Bundle
-        run: |
-          mkdir -p dist
-          APP="./build/Build/Products/Release/MOpenKey.app"
-          ditto -c -k --keepParent "${APP}" dist/MOpenKey-macOS-Universal.zip
-
-      - name: Upload Build Artifact
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: MOpenKey-macOS-Universal
-          path: dist/MOpenKey-macOS-Universal.zip
+          path: dist/
           retention-days: 7
