@@ -11,6 +11,7 @@
 #import "Engine.h"
 #import "AppDelegate.h"
 #import "ViewController.h"
+#import "OpenKeyManager.h"
 
 #define FRONT_APP [[NSWorkspace sharedWorkspace] frontmostApplication].bundleIdentifier
 #define OTHER_CONTROL_KEY (_flag & kCGEventFlagMaskCommand) || (_flag & kCGEventFlagMaskControl) || \
@@ -599,6 +600,15 @@ extern "C" {
      * MAIN Callback.
      */
     CGEventRef OpenKeyCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon) {
+        // Recover if event tap is disabled by macOS due to system timeout or load
+        if (type == kCGEventTapDisabledByTimeout || type == kCGEventTapDisabledByUserInput) {
+            [OpenKeyManager reEnableEventTap];
+            return event;
+        }
+        if (!event) {
+            return NULL;
+        }
+        
         //dont handle my event
         if (CGEventGetIntegerValueField(event, kCGEventSourceStateID) == CGEventSourceGetSourceStateID(myEventSource)) {
             return event;

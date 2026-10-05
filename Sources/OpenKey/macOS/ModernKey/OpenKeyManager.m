@@ -92,6 +92,12 @@ static CFRunLoopSourceRef runLoopSource;
     return YES;
 }
 
++(void)reEnableEventTap {
+    if (eventTap != nil) {
+        CGEventTapEnable(eventTap, true);
+    }
+}
+
 +(NSArray*)getTableCodes {
     return [[NSArray alloc] initWithObjects:
             @"Unicode",
@@ -240,7 +246,7 @@ static CFRunLoopSourceRef runLoopSource;
 +(NSString*)getApplicationSupportFolder {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
     NSString *applicationSupportDirectory = [paths firstObject];
-    return [NSString stringWithFormat:@"%@/OpenKey", applicationSupportDirectory];
+    return [NSString stringWithFormat:@"%@/MOpenKey", applicationSupportDirectory];
 }
 
 +(NSString*)getUpdateBundlePath {

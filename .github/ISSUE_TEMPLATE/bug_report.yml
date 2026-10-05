@@ -1,0 +1,69 @@
+name: Bug Report
+description: Report a bug or unintended behavior in OpenKey
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue! Please check existing issues before submitting.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of the bug.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: macos-version
+    attributes:
+      label: macOS Version
+      options:
+        - macOS 15 Sequoia
+        - macOS 14 Sonoma
+        - macOS 13 Ventura
+        - macOS 12 Monterey
+        - Older / Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: architecture
+    attributes:
+      label: CPU Architecture
+      options:
+        - Apple Silicon (M1/M2/M3/M4)
+        - Intel (x86_64)
+    validations:
+      required: true
+
+  - type: input
+    id: affected-apps
+    attributes:
+      label: Affected Applications
+      description: In which apps does the bug occur? (e.g. Google Chrome, VS Code, Slack, Safari)
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro-steps
+    attributes:
+      label: Steps to Reproduce
+      description: Step-by-step instructions to reproduce the behavior.
+      placeholder: |
+        1. Open VS Code
+        2. Set input mode to Telex
+        3. Type 'vieetj'
+        4. See erroneous characters...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true

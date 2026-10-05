@@ -31,12 +31,20 @@ BOOL MJAccessibilityIsEnabled(void) {
     return isEnabled;
 }
 
+#import <Cocoa/Cocoa.h>
+
 void MJAccessibilityOpenPanel(void) {
     if (AXIsProcessTrustedWithOptions != NULL) {
         AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)@{(__bridge id)kAXTrustedCheckOptionPrompt: @YES});
     }
-    else {
-        static NSString* script = @"tell application \"System Preferences\"\nactivate\nset current pane to pane \"com.apple.preference.universalaccess\"\nend tell";
-        [[[NSAppleScript alloc] initWithSource:script] executeAndReturnError:nil];
+    
+    // Modern macOS (Ventura, Sonoma, Sequoia): Open System Settings directly
+    NSURL *url = [NSURL URLWithString:@"x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"];
+    if (url && [[NSWorkspace sharedWorkspace] openURL:url]) {
+        return;
     }
+    
+    // Fallback for legacy macOS (Mojave, Catalina)
+    static NSString* script = @"tell application \"System Preferences\"\nactivate\nset current pane to pane \"com.apple.preference.universalaccess\"\nend tell";
+    [[[NSAppleScript alloc] initWithSource:script] executeAndReturnError:nil];
 }

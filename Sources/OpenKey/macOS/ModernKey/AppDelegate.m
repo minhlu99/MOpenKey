@@ -93,7 +93,7 @@ extern bool convertToolDontAlertWhenCompleted;
 
 -(void)askPermission {
     NSAlert *alert = [[NSAlert alloc] init];
-    [alert setMessageText: [NSString stringWithFormat:@"OpenKey cần bạn cấp quyền để có thể hoạt động!"]];
+    [alert setMessageText: [NSString stringWithFormat:@"MOpenKey cần bạn cấp quyền để có thể hoạt động!"]];
     [alert setInformativeText:@"Vui lòng chạy lại ứng dụng sau khi cấp quyền."];
 
     [alert addButtonWithTitle:@"Không"];
@@ -320,8 +320,28 @@ extern bool convertToolDontAlertWhenCompleted;
 }
 
 -(void)setRunOnStartup:(BOOL)val {
-    CFStringRef appId = (__bridge CFStringRef)@"com.tuyenmai.OpenKeyHelper";
-    SMLoginItemSetEnabled(appId, val);
+    if (@available(macOS 13.0, *)) {
+        SMAppService *service = [SMAppService mainAppService];
+        NSError *error = nil;
+        if (val) {
+            if (service.status != SMAppServiceStatusEnabled) {
+                [service registerAndReturnError:&error];
+            }
+        } else {
+            if (service.status == SMAppServiceStatusEnabled) {
+                [service unregisterAndReturnError:&error];
+            }
+        }
+        if (error) {
+            NSLog(@"SMAppService launch-on-login error: %@", error.localizedDescription);
+        }
+    } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        CFStringRef appId = (__bridge CFStringRef)@"com.tuyenmai.OpenKeyHelper";
+        SMLoginItemSetEnabled(appId, val);
+#pragma clang diagnostic pop
+    }
 }
 
 -(void)setGrayIcon:(BOOL)val {

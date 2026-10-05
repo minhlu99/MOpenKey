@@ -1,10 +1,35 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
 
+# Xcode
+build/
+dist/
+*.mode1v3
+*.mode2v3
+*.moved-aside
+*.pbxuser
+*.perspectivev3
+*.xcuserstate
+xcuserdata/
+DerivedData/
+
+# Windows Visual Studio
 /Sources/OpenKey/win32/OpenKey/.vs/OpenKey
 /Sources/OpenKey/win32/OpenKey/x64/Debug
 /Sources/OpenKey/win32/OpenKey/x64/Release
 /Sources/OpenKey/win32/OpenKey/OpenKey/x64/Debug
 /Sources/OpenKey/win32/OpenKey/OpenKey/x64/Release
 /Sources/OpenKey/win32/OpenKey/OpenKeyUpdate/x64/Release
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Linux build artifacts
+*.o
+*.so
+*.a
+bin/
