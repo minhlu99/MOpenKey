@@ -1,6 +1,6 @@
 # MOpenKey
 
-[![macOS CI](https://github.com/myos-fork/MOpenKey/actions/workflows/ci.yml/badge.svg)](https://github.com/myos-fork/MOpenKey/actions)
+[![macOS CI](https://github.com/minhlu99/MOpenKey/actions/workflows/ci.yml/badge.svg)](https://github.com/minhlu99/MOpenKey/actions)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-macOS%2011%2B%20(Big%20Sur%20--%20Sequoia)-lightgrey.svg)]()
 [![Architecture](https://img.shields.io/badge/Architecture-Universal%20(Apple%20Silicon%20%2B%20Intel)-orange.svg)]()
@@ -43,7 +43,7 @@
 
 ### Option 1: Pre-built Release (Recommended)
 
-1. Download `MOpenKey-macOS-Universal.dmg` (or `.zip`) from the [Releases](https://github.com/myos-fork/MOpenKey/releases) page.
+1. Download `MOpenKey-macOS-Universal.dmg` (or `.zip`) from the [Releases](https://github.com/minhlu99/MOpenKey/releases) page.
 2. Drag **MOpenKey.app** into your **Applications** folder.
 3. Launch **MOpenKey** from Applications or Spotlight.
 
@@ -55,7 +55,7 @@
 ### Option 2: Build from Source
 
 ```bash
-git clone https://github.com/myos-fork/MOpenKey.git
+git clone https://github.com/minhlu99/MOpenKey.git
 cd MOpenKey
 ./scripts/build.sh
 ```
@@ -93,7 +93,7 @@ Contributions, bug reports, and suggestions are welcome! Please check our [Contr
 
 * **Original Project:** [OpenKey](https://github.com/tuyenvm/OpenKey) by **Mai Vũ Tuyên ([@tuyenvm](https://github.com/tuyenvm))**.  
   We are immensely grateful to Mai Vũ Tuyên for creating the original open-source OpenKey engine and laying the foundation for open Vietnamese input method development on macOS.
-* **MOpenKey Maintainer:** Minh Lu ([@myos-fork](https://github.com/myos-fork)) & macOS Community Contributors.
+* **MOpenKey Maintainer:** Minh Lu ([@minhlu99](https://github.com/minhlu99)) & macOS Community Contributors.
 
 ## 📄 License
 
