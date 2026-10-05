@@ -2,8 +2,8 @@
 /* Class = "NSMenuItem"; title = "Customize Toolbar…"; ObjectID = "1UK-8n-QPP"; */
 "1UK-8n-QPP.title" = "Customize Toolbar…";
 
-/* Class = "NSMenuItem"; title = "OpenKey"; ObjectID = "1Xt-HY-uBw"; */
-"1Xt-HY-uBw.title" = "OpenKey";
+/* Class = "NSMenuItem"; title = "MOpenKey"; ObjectID = "1Xt-HY-uBw"; */
+"1Xt-HY-uBw.title" = "MOpenKey";
 
 /* Class = "NSMenu"; title = "Find"; ObjectID = "1b7-l0-nxx"; */
 "1b7-l0-nxx.title" = "Find";
@@ -11,8 +11,8 @@
 /* Class = "NSMenuItem"; title = "Lower"; ObjectID = "1tx-W0-xDw"; */
 "1tx-W0-xDw.title" = "Lower";
 
-/* Class = "NSButtonCell"; title = "OK"; ObjectID = "2AS-Yr-pzd"; */
-"2AS-Yr-pzd.title" = "OK";
+/* Class = "NSButtonCell"; title = "Đóng"; ObjectID = "2AS-Yr-pzd"; */
+"2AS-Yr-pzd.title" = "Đóng";
 
 /* Class = "NSMenuItem"; title = "Raise"; ObjectID = "2h7-ER-AoG"; */
 "2h7-ER-AoG.title" = "Raise";
@@ -41,8 +41,8 @@
 /* Class = "NSMenuItem"; title = "Enter Full Screen"; ObjectID = "4J7-dP-txa"; */
 "4J7-dP-txa.title" = "Enter Full Screen";
 
-/* Class = "NSMenuItem"; title = "Quit OpenKey"; ObjectID = "4sb-4s-VLi"; */
-"4sb-4s-VLi.title" = "Quit OpenKey";
+/* Class = "NSMenuItem"; title = "Quit MOpenKey"; ObjectID = "4sb-4s-VLi"; */
+"4sb-4s-VLi.title" = "Quit MOpenKey";
 
 /* Class = "NSMenuItem"; title = "Edit"; ObjectID = "5QF-Oa-p0T"; */
 "5QF-Oa-p0T.title" = "Edit";
@@ -53,8 +53,8 @@
 /* Class = "NSMenuItem"; title = "Copy Style"; ObjectID = "5Vv-lz-BsD"; */
 "5Vv-lz-BsD.title" = "Copy Style";
 
-/* Class = "NSMenuItem"; title = "About OpenKey"; ObjectID = "5kV-Vb-QxS"; */
-"5kV-Vb-QxS.title" = "About OpenKey";
+/* Class = "NSMenuItem"; title = "About MOpenKey"; ObjectID = "5kV-Vb-QxS"; */
+"5kV-Vb-QxS.title" = "About MOpenKey";
 
 /* Class = "NSTextFieldCell"; title = "Mai Vũ Tuyên © 2019"; ObjectID = "630-DT-XcR"; */
 "630-DT-XcR.title" = "Mai Vũ Tuyên © 2019";
@@ -110,8 +110,8 @@
 /* Class = "NSMenu"; title = "Help"; ObjectID = "F2S-fz-NVQ"; */
 "F2S-fz-NVQ.title" = "Help";
 
-/* Class = "NSMenuItem"; title = "OpenKey Help"; ObjectID = "FKE-Sm-Kum"; */
-"FKE-Sm-Kum.title" = "OpenKey Help";
+/* Class = "NSMenuItem"; title = "MOpenKey Help"; ObjectID = "FKE-Sm-Kum"; */
+"FKE-Sm-Kum.title" = "MOpenKey Help";
 
 /* Class = "NSMenuItem"; title = "Text"; ObjectID = "Fal-I4-PZk"; */
 "Fal-I4-PZk.title" = "Text";
@@ -152,8 +152,8 @@
 /* Class = "NSMenuItem"; title = "Open…"; ObjectID = "IAo-SY-fd9"; */
 "IAo-SY-fd9.title" = "Open…";
 
-/* Class = "NSWindow"; title = "OpenKey 1.0 - Bộ gõ Tiếng Việt"; ObjectID = "IQv-IB-iLA"; */
-"IQv-IB-iLA.title" = "OpenKey 1.0 - Bộ gõ Tiếng Việt";
+/* Class = "NSWindow"; title = "MOpenKey 2.1.1 - Bộ gõ Tiếng Việt"; ObjectID = "IQv-IB-iLA"; */
+"IQv-IB-iLA.title" = "MOpenKey 2.1.1 - Bộ gõ Tiếng Việt";
 
 /* Class = "NSMenuItem"; title = "Justify"; ObjectID = "J5U-5w-g23"; */
 "J5U-5w-g23.title" = "Justify";
@@ -194,8 +194,8 @@
 /* Class = "NSMenuItem"; title = "Baseline"; ObjectID = "OaQ-X3-Vso"; */
 "OaQ-X3-Vso.title" = "Baseline";
 
-/* Class = "NSMenuItem"; title = "Hide OpenKey"; ObjectID = "Olw-nP-bQN"; */
-"Olw-nP-bQN.title" = "Hide OpenKey";
+/* Class = "NSMenuItem"; title = "Hide MOpenKey"; ObjectID = "Olw-nP-bQN"; */
+"Olw-nP-bQN.title" = "Hide MOpenKey";
 
 /* Class = "NSMenuItem"; title = "Find Previous"; ObjectID = "OwM-mh-QMV"; */
 "OwM-mh-QMV.title" = "Find Previous";
@@ -443,8 +443,8 @@
 /* Class = "NSMenuItem"; title = "VNI"; ObjectID = "tv3-iD-nS9"; */
 "tv3-iD-nS9.title" = "VNI";
 
-/* Class = "NSMenu"; title = "OpenKey"; ObjectID = "uQy-DD-JDr"; */
-"uQy-DD-JDr.title" = "OpenKey";
+/* Class = "NSMenu"; title = "MOpenKey"; ObjectID = "uQy-DD-JDr"; */
+"uQy-DD-JDr.title" = "MOpenKey";
 
 /* Class = "NSMenuItem"; title = "Cut"; ObjectID = "uRl-iY-unG"; */
 "uRl-iY-unG.title" = "Cut";
