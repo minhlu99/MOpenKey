@@ -50,14 +50,19 @@ extern int vPerformLayoutCompat;
 
 extern "C" {
     //app which must sent special empty character
-    NSArray* _niceSpaceApp = @[@"com.sublimetext.3",
+    NSArray* _niceSpaceApp = @[@"com.sublimetext.4",
+                               @"com.sublimetext.3",
                                @"com.sublimetext.2",
                              ];
     
     //app which error with unicode Compound
     NSArray* _unicodeCompoundApp = @[@"com.apple.",
-                                     @"com.google.Chrome", @"com.brave.Browser",
-                                     @"com.microsoft.edgemac.Dev", @"com.microsoft.edgemac.Beta", @"com.microsoft.Edge.Dev", @"com.microsoft.Edge"];
+                                     @"com.google.Chrome", @"com.google.Chrome.canary",
+                                     @"com.brave.Browser",
+                                     @"company.thebrowser.Browser", @"company.thebrowser.Arc",
+                                     @"com.microsoft.edgemac", @"com.microsoft.edgemac.Dev",
+                                     @"com.microsoft.edgemac.Beta", @"com.microsoft.Edge.Dev", @"com.microsoft.Edge",
+                                     @"com.operasoftware.Opera", @"com.vivaldi.Vivaldi"];
     NSArray* _recommendWorkaroundDisabledApp = @[@"com.apple.Spotlight"];
     
     CGEventSourceRef myEventSource = NULL;
@@ -750,7 +755,7 @@ extern "C" {
                 
                 //fix autocomplete
                 if (shouldUseRecommendWorkaround(FRONT_APP) && pData->extCode != 4) {
-                    if (vFixChromiumBrowser && [_unicodeCompoundApp containsObject:FRONT_APP]) {
+                    if (vFixChromiumBrowser && containUnicodeCompoundApp(FRONT_APP)) {
                         if (pData->backspaceCount > 0) {
                             SendShiftAndLeftArrow();
                             if (pData->backspaceCount == 1)
