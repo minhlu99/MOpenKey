@@ -7,6 +7,7 @@
 //
 
 #import "OpenKeyManager.h"
+#include <sys/stat.h>
 
 extern void OpenKeyInit(void);
 
@@ -153,94 +154,205 @@ static CFRunLoopSourceRef runLoopSource;
 #pragma mark -AutoUpdate feature
 
 +(void)checkNewVersion:(NSWindow*)parent callbackFunc:(CheckNewVersionCallback) callback {
-    //load new version config
     NSURLSession *aSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-    [[aSession dataTaskWithURL:[NSURL URLWithString:@"https://raw.githubusercontent.com/minhlu99/MOpenKey/main/version.json"] completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (((NSHTTPURLResponse *)response).statusCode == 200) {
-            if (data) {
-                if(NSClassFromString(@"NSJSONSerialization")) {
-                    NSError *error = nil;
-                    id object = [NSJSONSerialization
-                                 JSONObjectWithData:data
-                                 options:0
-                                 error:&error];
-                    
-                    if(error) {  }
-                    if([object isKindOfClass:[NSDictionary class]]) {
-                        NSDictionary *results = object;
-                        NSDictionary *ver = [results valueForKey:@"latestVersion"];
-                        NSString* versionCodeString = [ver valueForKey:@"versionCode"];
-                        int versionCode = (int)[versionCodeString integerValue];
-                        int currentVersionCode = (int)[((NSString*)[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"]) integerValue];
-                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (callback != nil) {
-                                callback();
-                            }
-                            if (versionCode > currentVersionCode || callback != nil) {
-                                [self showUpdateMessage:parent needUpdating:versionCode > currentVersionCode newVersion:[ver valueForKey:@"versionName"]];
-                            }
-                        });
-                    }
-                    else {
-                        //oh my god
-                    }
-                }
-                else {
-                    //can not parse json
-                }
+    NSURL *url = [NSURL URLWithString:@"https://raw.githubusercontent.com/minhlu99/MOpenKey/main/version.json"];
+    
+    [[aSession dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (callback != nil) {
+                callback();
             }
+        });
+        
+        if (error != nil || ((NSHTTPURLResponse *)response).statusCode != 200 || data == nil) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (parent != nil) {
+                    [self showMessage:parent message:@"Không thể kiểm tra cập nhật" subMsg:@"Vui lòng kiểm tra lại kết nối mạng và thử lại sau."];
+                }
+            });
+            return;
         }
+        
+        NSError *jsonError = nil;
+        id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+        if (![object isKindOfClass:[NSDictionary class]]) {
+            return;
+        }
+        
+        NSDictionary *results = (NSDictionary *)object;
+        NSDictionary *ver = [results valueForKey:@"latestVersion"];
+        NSString *versionName = [ver valueForKey:@"versionName"] ?: @"";
+        NSString *versionCodeString = [ver valueForKey:@"versionCode"] ?: @"0";
+        NSString *downloadUrl = [ver valueForKey:@"downloadUrl"] ?: @"";
+        NSString *releaseUrl = [ver valueForKey:@"releaseUrl"] ?: @"https://github.com/minhlu99/MOpenKey/releases/latest";
+        NSString *changelog = [ver valueForKey:@"changelog"] ?: @"";
+        
+        int versionCode = (int)[versionCodeString integerValue];
+        int currentVersionCode = (int)[((NSString*)[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]) integerValue];
+        NSString *currentVersionName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] ?: @"";
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            BOOL hasUpdate = (versionCode > currentVersionCode);
+            [self handleUpdateResult:parent
+                           hasUpdate:hasUpdate
+                          newVersion:versionName
+                          currentVer:currentVersionName
+                         currentCode:currentVersionCode
+                         downloadUrl:downloadUrl
+                          releaseUrl:releaseUrl
+                           changelog:changelog];
+        });
     }] resume];
 }
 
-+(void)showUpdateMessage:(NSWindow*)parent needUpdating:(BOOL)needUpdating newVersion:(NSString*)versionString {
-    NSAlert *alert = [[NSAlert alloc] init];
-    [alert setMessageText:(needUpdating ? [NSString stringWithFormat:@"MOpenKey có phiên bản mới (%@), bạn có muốn cập nhật không?", versionString] : @"Bạn đang dùng phiên bản mới nhất!")];
-    [alert setInformativeText:(needUpdating ? @"Bấm 'Có' để cập nhật MOpenKey." : @"")];
-    
-    if (!needUpdating) {
++(void)handleUpdateResult:(NSWindow*)parent
+                hasUpdate:(BOOL)hasUpdate
+               newVersion:(NSString*)newVersion
+               currentVer:(NSString*)currentVer
+              currentCode:(int)currentCode
+              downloadUrl:(NSString*)downloadUrl
+               releaseUrl:(NSString*)releaseUrl
+                changelog:(NSString*)changelog {
+    if (!hasUpdate) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"Bạn đang dùng phiên bản mới nhất!"];
+        [alert setInformativeText:[NSString stringWithFormat:@"MOpenKey %@ (build %d) là phiên bản mới nhất hiện tại.", currentVer, currentCode]];
         [alert addButtonWithTitle:@"OK"];
-    } else {
-        [alert addButtonWithTitle:@"Có"];
-        [alert addButtonWithTitle:@"Không"];
-    }
-    if (parent == nil) {
-        [alert.window makeKeyAndOrderFront:nil];
-        [alert.window setLevel:NSStatusWindowLevel];
-        NSModalResponse res = [alert runModal];
-        if (res == 1000 && needUpdating) {
-            [self launchUpdateHelper];
+        if (parent) {
+            [alert beginSheetModalForWindow:parent completionHandler:nil];
+        } else {
+            [alert runModal];
         }
+        return;
+    }
+    
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:[NSString stringWithFormat:@"Đã có bản cập nhật MOpenKey %@ mới!", newVersion]];
+    
+    NSMutableString *info = [NSMutableString stringWithFormat:@"Phiên bản hiện tại: %@\nPhiên bản mới: %@\n", currentVer, newVersion];
+    if (changelog.length > 0) {
+        [info appendFormat:@"\nNội dung cập nhật:\n%@\n", changelog];
+    }
+    [info appendString:@"\nBạn có muốn tự động cập nhật ngay bây giờ không?"];
+    [alert setInformativeText:info];
+    
+    [alert addButtonWithTitle:@"Cập nhật ngay"];
+    [alert addButtonWithTitle:@"Xem trên GitHub"];
+    [alert addButtonWithTitle:@"Để sau"];
+    
+    void (^actionHandler)(NSModalResponse) = ^(NSModalResponse returnCode) {
+        if (returnCode == NSAlertFirstButtonReturn) {
+            [self performInAppUpdate:downloadUrl newVersion:newVersion window:parent];
+        } else if (returnCode == NSAlertSecondButtonReturn) {
+            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:releaseUrl]];
+        }
+    };
+    
+    if (parent) {
+        [alert beginSheetModalForWindow:parent completionHandler:actionHandler];
     } else {
-        [alert beginSheetModalForWindow:parent completionHandler:^(NSModalResponse returnCode) {
-            if (returnCode == 1000 && needUpdating) {
-                [self launchUpdateHelper];
-            }
-        }];
+        NSModalResponse res = [alert runModal];
+        actionHandler(res);
     }
 }
 
-+(void)launchUpdateHelper {
-    //check update app has exist or not
-    NSError *copyError = nil;
-    NSString* target = [NSString stringWithFormat:@"%@/OpenKeyUpdate.app", [self getApplicationSupportFolder]];
-    [[NSFileManager defaultManager] removeItemAtPath:target error:&copyError];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:target]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:[self getApplicationSupportFolder] withIntermediateDirectories:YES attributes:nil error:nil];
-        
-        if (![[NSFileManager defaultManager] copyItemAtPath:[self getUpdateBundlePath] toPath:target error:&copyError]) {
-            NSLog(@"Error on copy");
-        }
++(void)performInAppUpdate:(NSString*)downloadUrl newVersion:(NSString*)newVersion window:(NSWindow*)window {
+    NSString *currentAppPath = [[NSBundle mainBundle] bundlePath];
+    if ([currentAppPath hasPrefix:@"/Volumes/"]) {
+        [self showMessage:window
+                  message:@"Không thể cập nhật từ đĩa ảo DMG"
+                   subMsg:@"Vui lòng kéo MOpenKey vào thư mục /Applications (Ứng dụng) trước khi sử dụng tính năng cập nhật tự động."];
+        return;
     }
     
-    NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
-    NSURL *url = [NSURL fileURLWithPath:[workspace fullPathForApplication:target]];
-    NSError *error = nil;
-    NSArray *arguments = [NSArray arrayWithObjects: @"yeah", nil];
-    [workspace launchApplicationAtURL:url options:0 configuration:[NSDictionary dictionaryWithObject:arguments forKey:NSWorkspaceLaunchConfigurationArguments] error:&error];
+    if (downloadUrl.length == 0) {
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://github.com/minhlu99/MOpenKey/releases/latest"]];
+        return;
+    }
     
-    [NSApp terminate:0]; //exit main app
+    NSAlert *progressAlert = [[NSAlert alloc] init];
+    [progressAlert setMessageText:@"Đang tải bản cập nhật MOpenKey..."];
+    [progressAlert setInformativeText:[NSString stringWithFormat:@"Đang tải MOpenKey %@ từ GitHub. Vui lòng đợi trong giây lát...", newVersion]];
+    
+    NSProgressIndicator *indicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 300, 20)];
+    [indicator setIndeterminate:YES];
+    [indicator startAnimation:nil];
+    [progressAlert setAccessoryView:indicator];
+    
+    if (window) {
+        [progressAlert beginSheetModalForWindow:window completionHandler:nil];
+    }
+    
+    NSURL *url = [NSURL URLWithString:downloadUrl];
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithURL:url completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
+        if (error != nil || ((NSHTTPURLResponse*)response).statusCode != 200 || location == nil) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (window && window.attachedSheet) {
+                    [window endSheet:window.attachedSheet];
+                }
+                [self showMessage:window message:@"Cập nhật thất bại" subMsg:@"Không thể tải về tệp tin cập nhật. Vui lòng thử lại sau hoặc tải thủ công trên GitHub."];
+            });
+            return;
+        }
+        
+        NSString *tempDir = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"MOpenKey_Update_%@", [[NSUUID UUID] UUIDString]]];
+        [[NSFileManager defaultManager] createDirectoryAtPath:tempDir withIntermediateDirectories:YES attributes:nil error:nil];
+        
+        NSString *zipPath = [tempDir stringByAppendingPathComponent:@"update.zip"];
+        NSError *moveError = nil;
+        [[NSFileManager defaultManager] moveItemAtURL:location toURL:[NSURL fileURLWithPath:zipPath] error:&moveError];
+        
+        NSTask *unzipTask = [[NSTask alloc] init];
+        [unzipTask setLaunchPath:@"/usr/bin/ditto"];
+        [unzipTask setArguments:@[@"-x", @"-k", zipPath, tempDir]];
+        [unzipTask launch];
+        [unzipTask waitUntilExit];
+        
+        NSString *extractedApp = [tempDir stringByAppendingPathComponent:@"MOpenKey.app"];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:extractedApp]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (window && window.attachedSheet) {
+                    [window endSheet:window.attachedSheet];
+                }
+                [self showMessage:window message:@"Cập nhật thất bại" subMsg:@"Không tìm thấy gói ứng dụng trong bản tải về."];
+            });
+            return;
+        }
+        
+        pid_t currentPID = [[NSProcessInfo processInfo] processIdentifier];
+        NSString *scriptPath = [tempDir stringByAppendingPathComponent:@"update.sh"];
+        NSString *scriptContent = [NSString stringWithFormat:
+            @"#!/bin/bash\n"
+            @"while kill -0 %d 2>/dev/null; do sleep 0.1; done\n"
+            @"rm -rf \"%@\"\n"
+            @"cp -R \"%@\" \"%@\"\n"
+            @"xattr -cr \"%@\" 2>/dev/null || true\n"
+            @"open \"%@\"\n"
+            @"rm -rf \"%@\"\n",
+            currentPID,
+            currentAppPath,
+            extractedApp,
+            currentAppPath,
+            currentAppPath,
+            currentAppPath,
+            tempDir
+        ];
+        
+        [scriptContent writeToFile:scriptPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        chmod([scriptPath UTF8String], 0755);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSTask *runScript = [[NSTask alloc] init];
+            [runScript setLaunchPath:@"/bin/bash"];
+            [runScript setArguments:@[scriptPath]];
+            [runScript launch];
+            
+            [NSApp terminate:nil];
+        });
+    }];
+    
+    [downloadTask resume];
 }
 
 +(NSString*)getApplicationSupportFolder {
@@ -249,8 +361,4 @@ static CFRunLoopSourceRef runLoopSource;
     return [NSString stringWithFormat:@"%@/MOpenKey", applicationSupportDirectory];
 }
 
-+(NSString*)getUpdateBundlePath {
-    NSString *currentpath = [[NSBundle mainBundle] bundlePath];
-    return [NSString stringWithFormat:@"%@/Contents/Library/LoginItems/OpenKeyUpdate.app", currentpath];
-}
 @end

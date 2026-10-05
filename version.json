@@ -1,7 +1,10 @@
 {
 	"latestVersion": {
 		"versionName": "2.1.1",
-		"versionCode": 51
+		"versionCode": 51,
+		"releaseUrl": "https://github.com/minhlu99/MOpenKey/releases/latest",
+		"downloadUrl": "https://github.com/minhlu99/MOpenKey/releases/download/v2.1.1/MOpenKey-macOS-Universal.zip",
+		"changelog": "- Hiện đại hóa các nút bấm chuẩn macOS HIG\n- Sửa lỗi hiển thị sai phiên bản giao diện\n- Tích hợp tính năng tự động cập nhật trong ứng dụng (In-App Updater)\n- Tương thích tối ưu macOS Sonoma & Sequoia"
 	},
 	"latestWinVersion": {
 		"versionName": "2.0.2",

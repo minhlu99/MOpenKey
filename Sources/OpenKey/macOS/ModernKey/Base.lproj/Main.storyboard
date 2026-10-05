@@ -752,7 +752,7 @@
                                         </connections>
                                     </clickGestureRecognizer>
                                 </gestureRecognizers>
-                                <textFieldCell key="cell" lineBreakMode="clipping" continuous="YES" sendsActionOnEndEditing="YES" title="https://github.com/tuyenvm/OpenKey" id="VCX-6k-cHt">
+                                <textFieldCell key="cell" lineBreakMode="clipping" continuous="YES" sendsActionOnEndEditing="YES" title="https://github.com/minhlu99/MOpenKey" id="VCX-6k-cHt">
                                     <font key="font" metaFont="systemThin" size="13"/>
                                     <color key="textColor" name="controlAccentColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -777,7 +777,7 @@
                                         </connections>
                                     </clickGestureRecognizer>
                                 </gestureRecognizers>
-                                <textFieldCell key="cell" lineBreakMode="clipping" continuous="YES" sendsActionOnEndEditing="YES" title="https://github.com/tuyenvm/OpenKey/releases" id="zCu-0X-Rqo">
+                                <textFieldCell key="cell" lineBreakMode="clipping" continuous="YES" sendsActionOnEndEditing="YES" title="https://github.com/minhlu99/MOpenKey/releases" id="zCu-0X-Rqo">
                                     <font key="font" metaFont="systemThin" size="13"/>
                                     <color key="textColor" name="controlAccentColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -802,7 +802,7 @@
                                         </connections>
                                     </clickGestureRecognizer>
                                 </gestureRecognizers>
-                                <textFieldCell key="cell" lineBreakMode="clipping" continuous="YES" sendsActionOnEndEditing="YES" title="https://www.facebook.com/OpenKeyVN" id="a54-tw-Amh">
+                                <textFieldCell key="cell" lineBreakMode="clipping" continuous="YES" sendsActionOnEndEditing="YES" title="https://github.com/minhlu99/MOpenKey/discussions" id="a54-tw-Amh">
                                     <font key="font" metaFont="systemThin" size="13"/>
                                     <color key="textColor" name="controlAccentColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -811,7 +811,7 @@
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AeG-WX-JbZ">
                                 <rect key="frame" x="160" y="185" width="422" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="Phiên bản: 1.0, cập nhật ngày 1/1/2019" id="FiL-a8-YwW">
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="Phiên bản 2.1.1" id="FiL-a8-YwW">
                                     <font key="font" metaFont="systemThin" size="13"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
